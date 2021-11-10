@@ -2,4 +2,4 @@
 
 ## Optimization algorithms implemented:
 
-- [Nelder-Mead](./optimizers/nelder_mead.ipynb)
+- [Nelder-Mead](./NelderMead.ipynb)

@@ -1,18 +1,20 @@
 import copy
 import numpy as np
 
-from optimizer import Optimizer
+from optimizers.abstract.Optimizer import Optimizer
 
 
 class NelderMead(Optimizer):
     def __init__(self, f, start_x, step=0.1,
                  alpha=1., gamma=2., rho=0.5, sigma=0.5,
-                 iter_limit=0, no_improv_treshold=10e-6,
+                 iter_limit=None, tol=10e-8,
                  no_improv_iter_limit=10):
-        super().__init__(f, best=Optimizer.State(start_x, f(start_x)),
-                         iter_limit=iter_limit,
-                         no_improv_treshold=no_improv_treshold,
+
+        super().__init__(start_x,
+                         iter_limit=iter_limit, tol=tol,
                          no_improv_iter_limit=no_improv_iter_limit)
+
+        self.f = f
 
         self.alpha = alpha
         self.gamma = gamma
@@ -20,8 +22,10 @@ class NelderMead(Optimizer):
         self.sigma = sigma
 
         self.dim = 0
-        self.start_x = start_x
         self.step = step
+
+    def calculate_score(self):
+        return self.f(self.x)
 
     @staticmethod
     def initial_simplex(f, dim, x_start, step):
@@ -33,13 +37,9 @@ class NelderMead(Optimizer):
         return simplex
 
     def init(self):
-        self.dim = len(self.start_x)
-        self.simplex = self.initial_simplex(self.f, self.dim, self.start_x,
+        self.dim = len(self.x)
+        self.simplex = self.initial_simplex(self.f, self.dim, self.x,
                                             self.step)
-
-    def get_best(self):
-        self.simplex.sort(key=lambda p: p.score)
-        return self.simplex[0]
 
     @staticmethod
     def centroid(dim, simplex):
@@ -48,7 +48,7 @@ class NelderMead(Optimizer):
             x0 += point.x
         return x0 / dim
 
-    def update(self):
+    def update_simplex(self):
         # centroid
         x0 = self.centroid(self.dim, self.simplex)
 
@@ -85,3 +85,10 @@ class NelderMead(Optimizer):
             score = self.f(redx)
             new_simplex.append(Optimizer.State(redx, score))
         self.simplex = new_simplex
+
+    def update(self):
+        self.update_simplex()
+        self.simplex.sort(key=lambda p: p.score)
+        self.x_scored = self.simplex[0]
+        self.x = self.simplex[0].x
+
