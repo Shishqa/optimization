@@ -3,3 +3,4 @@
 ## Optimization algorithms implemented:
 
 - [Nelder-Mead](./NelderMead.ipynb)
+- [Preconditioned Conjugate Gradient](./PreconditionedCG.ipynb)
