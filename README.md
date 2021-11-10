@@ -4,3 +4,4 @@
 
 - [Nelder-Mead](./NelderMead.ipynb)
 - [Preconditioned Conjugate Gradient](./PreconditionedCG.ipynb)
+- [Accelerated Gradient Descent](./AcceleratedGD.ipynb)
