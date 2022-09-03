@@ -1,4 +1,4 @@
-<h1 align="center">Optimization DIHT</h1>
+<h1 align="center">Optimization</h1>
 
 ## Optimization algorithms implemented:
 
